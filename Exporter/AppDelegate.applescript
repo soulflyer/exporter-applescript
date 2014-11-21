@@ -409,4 +409,12 @@ script IWAppDelegate
         end if
     end getLibPath
     
+    on applicationShouldTerminate_(sender)
+        set thescript to "rm " & my tempDatabase
+        do shell script thescript
+        log "Deleting database copy and exiting"
+        -- Insert code here to do any housekeeping before your application quits
+        return current application's NSTerminateNow
+    end applicationShouldTerminate_
+    
 end script
