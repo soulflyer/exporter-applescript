@@ -672,14 +672,14 @@
         <window title="Exporter" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="998" height="449"/>
+            <rect key="contentRect" x="335" y="390" width="998" height="473"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="998" height="449"/>
+                <rect key="frame" x="0.0" y="-1" width="998" height="473"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="4L8-a6-DSQ">
-                        <rect key="frame" x="18" y="23" width="962" height="17"/>
+                        <rect key="frame" x="18" y="49" width="281" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="8Pw-Z9-4q4">
                             <font key="font" metaFont="system"/>
@@ -695,7 +695,7 @@
                         </connections>
                     </textField>
                     <searchField verticalHuggingPriority="750" id="sr0-dC-iAF">
-                        <rect key="frame" x="776" y="20" width="202" height="22"/>
+                        <rect key="frame" x="776" y="44" width="202" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="U72-Or-T46">
                             <font key="font" metaFont="system"/>
@@ -711,19 +711,8 @@
                             </binding>
                         </connections>
                     </searchField>
-                    <button verticalHuggingPriority="750" id="gGC-w0-rsc">
-                        <rect key="frame" x="664" y="19" width="52" height="19"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="roundRect" title="Export" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="b3M-ng-xRM">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="cellTitle"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="testButton:" target="Voe-Tx-rLC" id="pdq-M9-Drf"/>
-                        </connections>
-                    </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="RLY-70-Cca">
-                        <rect key="frame" x="20" y="61" width="958" height="368"/>
+                        <rect key="frame" x="20" y="85" width="958" height="368"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="5Hp-yi-CrZ">
                             <rect key="frame" x="1" y="17" width="956" height="350"/>
@@ -828,9 +817,32 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
+                    <button verticalHuggingPriority="750" id="gGC-w0-rsc">
+                        <rect key="frame" x="716" y="43" width="52" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="roundRect" title="Export" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="b3M-ng-xRM">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="cellTitle"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="testButton:" target="Voe-Tx-rLC" id="pdq-M9-Drf"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="vYI-h3-m21">
+                        <rect key="frame" x="327" y="49" width="229" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="4Mr-1S-t0L">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="Voe-Tx-rLC" name="value" keyPath="exportStatusMessage" id="UHB-L9-ubV"/>
+                        </connections>
+                    </textField>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="416" y="342.5"/>
+            <point key="canvasLocation" x="558" y="352.5"/>
         </window>
         <arrayController editable="NO" selectsInsertedObjects="NO" id="Jps-ww-xFW">
             <connections>
