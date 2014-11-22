@@ -27,6 +27,10 @@ script IWAppDelegate
 	property libDBPOSIX : ""
 	property tempDatabase : "/tmp/Library.apdb"
 	property exportStatusMessage : ""
+	property currentProject : ""
+	property progressCounter : 0
+	property progressSteps : 5
+	property stepsPerProject : 5
 	
 	-- IBOutlets
 	property theWindow : missing value
@@ -49,6 +53,7 @@ script IWAppDelegate
 		log thescript
 		do shell script thescript
 		log "copied database"
+		set my progressCounter to 0
 	end applicationWillFinishLaunching:
 	
 	-----------------------------------------------------------------------------------------------------------------------
@@ -84,10 +89,16 @@ script IWAppDelegate
 	-----------------------------------------------------------------------------------------------------------------------
 	on testButton:sender
 		set theSel to theArrayController's selectedObjects() as list
+		set my progressSteps to (length of theSel) * (my stepsPerProject)
+		--set my progressCounter to 0
+		log "Progress steps " & my progressSteps
 		repeat with selection in theSel
 			(my logg:(theName of selection))
+			set my currentProject to (theName of selection)
 			(my exportPics:(theName of selection))
 		end repeat
+		set my progressCounter to 0
+		set my exportStatusMessage to "Finished export"
 	end testButton:
 	
 	-----------------------------------------------------------------------------------------------------------------------
@@ -118,11 +129,8 @@ script IWAppDelegate
 				tell folder theYear
 					tell folder theMonth
 						tell project theProject
-							--my logg:theProject
 							set thescript to p_sql & my tempDatabase & " \"select note from RKNOTE where ATTACHEDTOUUID='" & id & "'\""
-							--my logg:thescript
 							set notes to do shell script thescript
-							--my logg:notes
 							set cursel to (every image version where (main rating is greater than 2) or (color label is red)) as list
 						end tell
 					end tell
@@ -164,40 +172,44 @@ script IWAppDelegate
 		do shell script thescript
 		
 		tell application "Aperture"
-			set my exportStatusMessage to "Exporting thumbnails"
+			set my exportStatusMessage to "Exporting thumbnails from " & my currentProject
 			theWindow's displayIfNeeded()
 			export theSel naming files with file naming policy "Version Name" using export setting "JPEG - Thumbnail" to tempPath
 			set thescript to "mv " & tempPath & "/* " & theThumbsPath & "/"
 			--my logg:thescript
 			do shell script thescript
+			set my progressCounter to (my progressCounter) + 1
 			my logg:"Finished exporting thumbnails"
 			
-			set my exportStatusMessage to "Exporting medium pics"
+			set my exportStatusMessage to "Exporting medium pics from " & my currentProject
 			theWindow's displayIfNeeded()
 			export theSel naming files with file naming policy "Version Name" using export setting "JPEG - Fit within 1024 x 1024" to tempPath
 			set thescript to "/Users/iain/bin/add-watermark " & tempPath & "/*.jpg "
 			do shell script thescript
 			set thescript to "mv " & tempPath & "/* " & theMediumPath
 			do shell script thescript
+			set my progressCounter to (my progressCounter) + 1
 			my logg:"Finished exporting mediums"
 			
-			set my exportStatusMessage to "Exporting large pics"
+			set my exportStatusMessage to "Exporting large pics from " & my currentProject
 			theWindow's displayIfNeeded()
 			export theSel naming files with file naming policy "Version Name" using export setting "JPEG - Fit within 2048 x 2048" to tempPath
 			set thescript to "/Users/iain/bin/add-watermark " & tempPath & "/*.jpg "
 			do shell script thescript
 			set thescript to "mv " & tempPath & "/* " & theLargePath
 			do shell script thescript
+			set my progressCounter to (my progressCounter) + 1
 			my logg:"Finished exporting larges"
 			theWindow's displayIfNeeded()
 			
-			set my exportStatusMessage to "Exporting fullsize pics"
+			set my exportStatusMessage to "Exporting fullsize pics from " & my currentProject
 			theWindow's displayIfNeeded()
 			export theSel naming files with file naming policy "Version Name" using export setting "JPEG - Original Size" to tempPath
 			set thescript to "mv " & tempPath & "/* " & theFullsizePath
 			do shell script thescript
 			my logg:"Finished exporting fullsize"
 			set my exportStatusMessage to ""
+			set my progressCounter to (my progressCounter) + 1
 			theWindow's displayIfNeeded()
 		end tell
 		set thescript to "rm -r " & tempPath
@@ -239,6 +251,7 @@ script IWAppDelegate
 				end if
 				
 			end repeat
+			set my progressCounter to (my progressCounter) + 1
 		end tell
 	end addLinks
 	

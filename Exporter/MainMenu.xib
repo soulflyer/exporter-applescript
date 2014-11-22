@@ -678,22 +678,6 @@
                 <rect key="frame" x="0.0" y="-1" width="998" height="473"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="4L8-a6-DSQ">
-                        <rect key="frame" x="18" y="49" width="281" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="8Pw-Z9-4q4">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <binding destination="Voe-Tx-rLC" name="value" keyPath="lastRunDate" id="vhC-Dh-djr">
-                                <dictionary key="options">
-                                    <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </textField>
                     <searchField verticalHuggingPriority="750" id="sr0-dC-iAF">
                         <rect key="frame" x="776" y="44" width="202" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -818,18 +802,18 @@
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" id="gGC-w0-rsc">
-                        <rect key="frame" x="716" y="43" width="52" height="19"/>
+                        <rect key="frame" x="708" y="42" width="60" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="roundRect" title="Export" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="b3M-ng-xRM">
+                        <buttonCell key="cell" type="roundTextured" title="Export" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="b3M-ng-xRM">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="cellTitle"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="testButton:" target="Voe-Tx-rLC" id="pdq-M9-Drf"/>
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="vYI-h3-m21">
-                        <rect key="frame" x="327" y="49" width="229" height="17"/>
+                        <rect key="frame" x="18" y="49" width="538" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="4Mr-1S-t0L">
                             <font key="font" metaFont="system"/>
@@ -840,6 +824,14 @@
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="exportStatusMessage" id="UHB-L9-ubV"/>
                         </connections>
                     </textField>
+                    <progressIndicator maxValue="100" style="bar" id="nHb-OA-Tdd">
+                        <rect key="frame" x="20" y="19" width="604" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <connections>
+                            <binding destination="Voe-Tx-rLC" name="maxValue" keyPath="progressSteps" id="uzR-xT-cJH"/>
+                            <binding destination="Voe-Tx-rLC" name="value" keyPath="progressCounter" previousBinding="uzR-xT-cJH" id="o8h-zf-efd"/>
+                        </connections>
+                    </progressIndicator>
                 </subviews>
             </view>
             <point key="canvasLocation" x="558" y="352.5"/>
