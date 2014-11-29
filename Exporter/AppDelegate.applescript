@@ -29,8 +29,8 @@ script IWAppDelegate
 	property exportStatusMessage : ""
 	property currentProject : ""
 	property progressCounter : 0
-	property progressSteps : 5
-	property stepsPerProject : 5
+	property progressSteps : 6
+	property stepsPerProject : 6
 	
 	-- IBOutlets
 	property theWindow : missing value
@@ -57,7 +57,7 @@ script IWAppDelegate
 	end applicationWillFinishLaunching:
 	
 	-----------------------------------------------------------------------------------------------------------------------
-	on getProjects:sender
+	on getProjects_(sender)
 		tell application "Aperture"
 			repeat with topFolder in my topFolders
 				(my logg:topFolder)
@@ -87,7 +87,7 @@ script IWAppDelegate
 	end getProjects:
 	
 	-----------------------------------------------------------------------------------------------------------------------
-	on testButton:sender
+	on testButton_(sender)
 		set theSel to theArrayController's selectedObjects() as list
 		set my progressSteps to (length of theSel) * (my stepsPerProject)
 		--set my progressCounter to 0
@@ -100,6 +100,66 @@ script IWAppDelegate
 		set my progressCounter to 0
 		set my exportStatusMessage to "Finished export"
 	end testButton:
+	
+	-----------------------------------------------------------------------------------------------------------------------
+	on setExportedDate(selectedPics)
+		-- Make sure the modified time comes before the exported date
+		set edate to (current date) + 1 * minutes
+		set curyear to year of edate as string
+		set curmonth to month of edate as string
+		my logg:curmonth
+		set curmonth to my monthToIntegerString:curmonth
+		set curday to day of edate as string
+		if length of curday is 1 then
+			set curday to "0" & curday
+		end if
+		set curhour to hours of edate as string
+		if length of curhour is 1 then
+			set curhour to "0" & curhour
+		end if
+		set curmins to minutes of edate as string
+		if length of curmins is 1 then
+			set curmins to "0" & curmins
+		end if
+		set cursecs to seconds of edate as string
+		if length of cursecs is 1 then
+			set cursecs to "0" & cursecs
+		end if
+		set exportedDate to curyear & curmonth & curday & "T" & curhour & curmins & cursecs & "+07"
+		log "Export date: " & exportedDate
+		tell application "Aperture"
+			repeat with pic in selectedPics
+				tell pic
+					(my logg:("setting export date of " & name))
+					make new IPTC tag with properties {name:"ReferenceDate", value:exportedDate}
+				end tell
+			end repeat
+		end tell
+	end setExportedDate
+	
+	-----------------------------------------------------------------------------------------------------------------------
+	on setUrgency(pr)
+		tell application "Aperture"
+			tell project pr
+				-- Digikam uses Urgency to store the ratings, so convert Aperture rating to urgency
+				tell (every image version where main rating is 5)
+					make new IPTC tag with properties {name:"Urgency", value:"1"}
+				end tell
+				tell (every image version where main rating is 4)
+					make new IPTC tag with properties {name:"Urgency", value:"2"}
+				end tell
+				tell (every image version where main rating is 3)
+					make new IPTC tag with properties {name:"Urgency", value:"4"}
+				end tell
+				tell (every image version where main rating is 2)
+					make new IPTC tag with properties {name:"Urgency", value:"5"}
+				end tell
+				tell (every image version where main rating is 1)
+					make new IPTC tag with properties {name:"Urgency", value:"6"}
+				end tell
+			end tell
+		end tell
+	end setUrgency
 	
 	-----------------------------------------------------------------------------------------------------------------------
 	on exportPics:theProjectPath
@@ -132,18 +192,20 @@ script IWAppDelegate
 							set thescript to p_sql & my tempDatabase & " \"select note from RKNOTE where ATTACHEDTOUUID='" & id & "'\""
 							set notes to do shell script thescript
 							set cursel to (every image version where (main rating is greater than 2) or (color label is red)) as list
+							my setUrgency(theProject)
 						end tell
 					end tell
 				end tell
-				my doExport(cursel, thumbsPath, mediumPath, largePath, fullsizePath)
-				my addLinks(cursel, mastersPath)
 			end tell
-			--log"Ended tell Aperture"
+			my doExport(cursel, thumbsPath, mediumPath, largePath, fullsizePath)
+			my addLinks(cursel, mastersPath)
+			set my exportStatusMessage to "Building web page for " & my currentProject
 			set thescript to "echo \"" & notes & "\"> " & rootPath & "/notes.txt"
 			do shell script thescript
 			set thescript to "/Users/iain/bin/build-shoot-page " & rootPath
 			log thescript
 			do shell script thescript
+			set my progressCounter to (my progressCounter) + 1
 		else
 			(alert("Problem with path to project. Is it in yyyy/mm/dd-projname form?"))
 		end if
@@ -208,10 +270,12 @@ script IWAppDelegate
 			set thescript to "mv " & tempPath & "/* " & theFullsizePath
 			do shell script thescript
 			my logg:"Finished exporting fullsize"
-			set my exportStatusMessage to ""
 			set my progressCounter to (my progressCounter) + 1
 			theWindow's displayIfNeeded()
 		end tell
+		
+		my setExportedDate(theSel)
+		
 		set thescript to "rm -r " & tempPath
 		do shell script thescript
 	end doExport
@@ -372,7 +436,7 @@ script IWAppDelegate
 		(*
          In OS X 10.9, you do not need to make a new instance of NSDateComponents, instead using:	*)
 		set theCalendar to current application's NSCalendar's currentCalendar()
-		set theNSDate to theCalendar's dateWithEra:theEra |year|:theYear |month|:(theMonth as integer) Â
+		set theNSDate to theCalendar's dateWithEra:theEra |year|:theYear |month|:(theMonth as integer) Â¬
 			|day|:theDay hour:0 minute:0 |second|:theSeconds nanosecond:0
 		--*)
 		return theNSDate
@@ -440,7 +504,7 @@ script IWAppDelegate
 		end if
 	end getLibPath
 	
-	on applicationShouldTerminate:sender
+	on applicationShouldTerminate_(sender)
 		set thescript to "rm " & my tempDatabase
 		do shell script thescript
 		log "Deleting database copy and exiting"
