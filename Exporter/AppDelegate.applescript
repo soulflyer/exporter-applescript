@@ -17,7 +17,7 @@
 script IWAppDelegate
 	property parent : class "NSObject"
 	property theData : {}
-	property topFolders : {"2014"}
+	property topFolders : {"2009", "2010", "2011", "2012", "2013", "2014"}
 	property allProjects : {}
 	property separator : "/"
 	property exportPath : "/Users/iain/Pictures/Published"
